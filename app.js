@@ -14,7 +14,28 @@ const streakDisplay = document.getElementById("streak");
 let goals = JSON.parse(localStorage.getItem("goals")) || [];
 let streak = localStorage.getItem("streak") || 0;
 let lastDate = localStorage.getItem("lastDate") || "";
+// Daily Motivation Button (FreeMind)
 
+const button = document.getElementById("dailyBtn");
+const text = document.getElementById("dailyText");
+
+const messages = [
+  "You are stronger than the urge.",
+  "One day at a time. You are winning.",
+  "Freedom is built in small choices.",
+  "Your break-through begins today.",
+  "You were not created to be a slave.",
+  "This moment does not control you.",
+  "You are healing more than you know.",
+  "Choose discipline. Choose life.",
+  "The chains are breaking right now.",
+  "Proud of you for showing up today."
+];
+
+button.addEventListener("click", () => {
+  const random = Math.floor(Math.random() * messages.length);
+  text.textContent = messages[random];
+});
 // Motivational messages
 const messages = [
   "You are stronger than your urges.",
