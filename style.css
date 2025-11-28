@@ -1,72 +1,65 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
     background: #0f172a;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
 }
 
-header {
-    background: #1e293b;
-    padding: 20px;
-    border-bottom: 2px solid #38bdf8;
-}
-
 h1 {
-    margin: 0;
+    margin-top: 25px;
+    font-size: 36px;
     color: #38bdf8;
 }
 
-.section {
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 600px;
-    background: #1e293b;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #000;
+.subtitle {
+    color: #94a3b8;
+    margin-bottom: 25px;
+    font-size: 14px;
 }
 
-textarea {
-    width: 90%;
-    padding: 10px;
+.box {
+    background: #1e293b;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+input {
+    width: 80%;
+    padding: 12px;
     border-radius: 8px;
     border: none;
-    outline: none;
+    margin-top: 10px;
+    margin-bottom: 15px;
     font-size: 16px;
 }
 
 button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: #38bdf8;
+    background: #0284c7;
     border: none;
-    border-radius: 6px;
+    padding: 14px 18px;
+    border-radius: 10px;
     font-size: 16px;
-    font-weight: bold;
+    color: white;
     cursor: pointer;
+    margin: 5px;
 }
 
-button:hover {
-    background: #0ea5e9;
+button:active {
+    transform: scale(0.97);
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+.danger {
+    background: #dc2626;
 }
 
-li {
-    background: #334155;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 6px;
+p {
+    color: #cbd5e1;
 }
 
-footer {
-    margin-top: 30px;
-    padding: 15px;
-    background: #1e293b;
-    font-size: 14px;
-    color: #94a3b8;
+#dayCount {
+    color: #22c55e;
 }
