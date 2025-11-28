@@ -1,120 +1,126 @@
-// =============================
-// FREEMIND APP BRAIN
-// =============================
+/* ===============================
+   FREEMIND APP - MAIN APP.JS
+   Optimized Version (2025)
+================================= */
 
-// Get elements
-const goalInput = document.getElementById("goalInput");
-const goalList = document.getElementById("goalList");
-const saveBtn = document.getElementById("saveGoal");
-const resetBtn = document.getElementById("resetDay");
-const messageBox = document.getElementById("motivationMessage");
-const streakDisplay = document.getElementById("streak");
+document.addEventListener("DOMContentLoaded", initApp);
 
-// Data
-let goals = JSON.parse(localStorage.getItem("goals")) || [];
-let streak = localStorage.getItem("streak") || 0;
-let lastDate = localStorage.getItem("lastDate") || "";
-// Daily Motivation Button (FreeMind)
+async function initApp() {
+  console.log("✅ FreeMind App is starting...");
 
-const button = document.getElementById("dailyBtn");
-const text = document.getElementById("dailyText");
-
-const messages = [
-  "You are stronger than the urge.",
-  "One day at a time. You are winning.",
-  "Freedom is built in small choices.",
-  "Your break-through begins today.",
-  "You were not created to be a slave.",
-  "This moment does not control you.",
-  "You are healing more than you know.",
-  "Choose discipline. Choose life.",
-  "The chains are breaking right now.",
-  "Proud of you for showing up today."
-];
-
-button.addEventListener("click", () => {
-  const random = Math.floor(Math.random() * messages.length);
-  text.textContent = messages[random];
-});
-// Motivational messages
-const messages = [
-  "You are stronger than your urges.",
-  "Today is another victory. Keep going.",
-  "Your mind is being renewed daily.",
-  "Self-control is real power.",
-  "Your best life starts with discipline.",
-  "You are breaking chains, never go back.",
-  "Freedom feels better than regret.",
-  "God is giving you strength.",
-  "You are winning, one day at a time.",
-  "I am proud of you for continuing."
-];
-
-// On load
-displayGoals();
-displayMessage();
-checkStreak();
-
-// Save goal
-saveBtn.addEventListener("click", () => {
-  if (goalInput.value.trim() !== "") {
-    goals.push(goalInput.value);
-    localStorage.setItem("goals", JSON.stringify(goals));
-    goalInput.value = "";
-    displayGoals();
+  try {
+    await loadUserData();
+    await loadMap();
+    setupButtons();
+    setupNavigation();
+  } catch (error) {
+    console.error("❌ App failed to load:", error);
   }
-});
+}
 
-// Reset day
-resetBtn.addEventListener("click", () => {
-  let today = new Date().toDateString();
+/* -------------------------------
+      LOAD USER DATA
+--------------------------------*/
+async function loadUserData() {
+  console.log("📥 Loading user data...");
 
-  if (today !== lastDate) {
-    streak++;
-    localStorage.setItem("streak", streak);
-    localStorage.setItem("lastDate", today);
+  const user = localStorage.getItem("freemindUser");
+
+  if (user) {
+    const userData = JSON.parse(user);
+    console.log("👤 User loaded:", userData.username);
+    document.getElementById("usernameDisplay").innerText = userData.username;
+  } else {
+    console.log("⚠️ No user found. Guest mode.");
   }
+}
 
-  dailyMessage();
-  displayStreak();
-});
+/* -------------------------------
+      LOAD ARCGIS MAP
+--------------------------------*/
+async function loadMap() {
+  console.log("🗺️ Loading map...");
 
-// Show goals
-function displayGoals() {
-  goalList.innerHTML = "";
-  goals.forEach((goal, index) => {
-    let li = document.createElement("li");
-    li.textContent = goal;
-    goalList.appendChild(li);
+  require([
+    "esri/Map",
+    "esri/views/MapView"
+  ], function (Map, MapView) {
+
+    const map = new Map({
+      basemap: "dark-gray"
+    });
+
+    const view = new MapView({
+      container: "viewDiv",
+      map: map,
+      zoom: 5,
+      center: [37.9062, 0.0236] // Kenya Default
+    });
+
+    console.log("✅ Map loaded successfully");
   });
 }
 
-// Motivation message
-function dailyMessage() {
-  let random = Math.floor(Math.random() * messages.length);
-  messageBox.textContent = messages[random];
-}
+/* -------------------------------
+       BUTTON CONTROLS
+--------------------------------*/
+function setupButtons() {
 
-// Display message on load
-function displayMessage() {
-  dailyMessage();
-}
+  const saveBtn = document.getElementById("saveProgress");
+  const resetBtn = document.getElementById("resetProgress");
 
-// Display streak
-function displayStreak() {
-  streakDisplay.textContent = streak + " day(s) strong 💪";
-}
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveProgress);
+  }
 
-// Check streak each load
-function checkStreak() {
-  let today = new Date().toDateString();
-
-  if (today !== lastDate) {
-    displayStreak();
-  } else {
-    displayStreak();
+  if (resetBtn) {
+    resetBtn.addEventListener("click", resetApp);
   }
 }
 
-// First load streak show
-displayStreak();
+/* -------------------------------
+      SAVE PROGRESS
+--------------------------------*/
+function saveProgress() {
+  const progress = {
+    streak: 7,
+    updated: new Date().toISOString()
+  };
+
+  localStorage.setItem("freemindProgress", JSON.stringify(progress));
+  alert("✅ Progress saved!");
+}
+
+/* -------------------------------
+      RESET APP
+--------------------------------*/
+function resetApp() {
+  localStorage.clear();
+  alert("App has been reset.");
+  location.reload();
+}
+
+/* -------------------------------
+       PAGE NAVIGATION
+--------------------------------*/
+function setupNavigation() {
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  navLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      loadPage(link.getAttribute("href"));
+    });
+  });
+}
+
+async function loadPage(page) {
+  try {
+    const res = await fetch(page);
+    const data = await res.text();
+    document.getElementById("appContainer").innerHTML = data;
+    console.log(`✅ ${page} loaded`);
+  } catch (err) {
+    console.error("❌ Page load failed:", err);
+  }
+}
