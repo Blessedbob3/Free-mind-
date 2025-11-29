@@ -1,31 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Map — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.29/"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FreeMind | Map & Distance Tracker</title>
+
+<link rel="stylesheet" href="styles.css" />
+
+<style>
+    body {
+        background: #eef2f7;
+        font-family: "Inter", sans-serif;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    #map {
+        width: 100%;
+        height: 420px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    .inputBox {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: 1px solid #bbb;
+    }
+
+    button {
+        width: 100%;
+        padding: 16px;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        background: #4b8df8;
+        color: white;
+        margin-top: 15px;
+    }
+
+    #output {
+        margin-top: 20px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+</style>
+
+<!-- Leaflet Map Library -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </head>
+
 <body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Recovery Map</h1></div></header>
 
-  <main class="container">
-    <section class="card">
-      <h2>Interactive Map</h2>
-      <div id="viewDiv" style="min-height:320px; border-radius:8px; overflow:hidden;"></div>
-      <p class="muted">Map loads if ArcGIS library is available.</p>
-    </section>
-  </main>
+<h1>Distance & Route Calculator</h1>
 
-  <footer class="footer">© FreeMind</footer>
+<div id="map"></div>
 
-  <script src="app.js" defer></script>
+<div class="inputBox">
+    <label>Your Destination:</label>
+    <input id="destinationInput" placeholder="Example: Nairobi CBD" />
+</div>
+
+<div class="inputBox">
+    <label>Travel Mode:</label>
+    <select id="mode">
+        <option value="driving-car">Driving</option>
+        <option value="foot-walking">Walking</option>
+    </select>
+</div>
+
+<button onclick="calculateRoute()">Calculate Route</button>
+
+<div id="output"></div>
+
+<script>
+// ======================================
+// CONFIG
+// ======================================
+const ORS_API_KEY = "YOUR_KEY_HERE"; // ← paste your real key
+
+let map = L.map('map').setView([0.0236, 37.9062], 7);
+let userMarker, destMarker, routeLine;
+
+// Load tiles
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19
+}).addTo(map);
+
+
+// --------------------------------------
+// GET USER LOCATION
+// --------------------------------------
+navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
+    userMarker = L.marker([lat, lng]).addTo(map)
+        .bindPopup("You Are Here").openPopup();
+
+    map.setView([lat, lng], 14);
+});
+
+
+// --------------------------------------
+// ROUTE CALCULATION
+// --------------------------------------
+async function calculateRoute() {
+    let destinationName = document.getElementById("destinationInput").value;
+    let mode = document.getElementById("mode").value;
+
+    if (!destinationName) {
+        alert("Please enter a destination.");
+        return;
+    }
+
+    // 1. Convert the destination name to coordinates
+    const geoRes = await fetch(
+        `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${destinationName}`
+    );
+    const geoData = await geoRes.json();
+
+    if (!geoData.features.length) {
+        alert("Destination not found.");
+        return;
+    }
+
+    const dest = geoData.features[0].geometry.coordinates; // [lng, lat]
+    const destLat = dest[1];
+    const destLng = dest[0];
+
+    if (destMarker) destMarker.remove();
+    destMarker = L.marker([destLat, destLng]).addTo(map)
+        .bindPopup(destinationName).openPopup();
+
+
+    // 2. Get user location again
+    navigator.geolocation.getCurrentPosition(async pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        // 3. Request ROUTE
+        const bodyData = {
+            coordinates: [
+                [lng, lat],
+                [destLng, destLat]
+            ]
+        };
+
+        const routeRes = await fetch(
+            `https://api.openrouteservice.org/v2/directions/${mode}`, {
+                method: "POST",
+                headers: {
+                    "Authorization": ORS_API_KEY,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bodyData)
+            }
+        );
+
+        const routeData = await routeRes.json();
+
+        const route = routeData.features[0];
+        const distance = route.properties.summary.distance / 1000; // km
+        const duration = route.properties.summary.duration / 60;   // minutes
+
+        // 4. Draw the route on the map
+        const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+
+        if (routeLine) routeLine.remove();
+        routeLine = L.polyline(coords, { color: "blue", weight: 5 }).addTo(map);
+
+        map.fitBounds(routeLine.getBounds());
+
+        // 5. Output results
+        document.getElementById("output").innerHTML = `
+            <b>Distance:</b> ${distance.toFixed(2)} km<br>
+            <b>Estimated Time:</b> ${duration.toFixed(0)} minutes<br>
+            <b>Mode:</b> ${mode === "driving-car" ? "Driving" : "Walking"}<br>
+            <b>Destination:</b> ${destinationName}
+        `;
+    });
+}
+</script>
+
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
