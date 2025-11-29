@@ -1,50 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>FreeMind | Motivation</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivation – FreeMind</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
 </head>
-
 <body>
 
-<header>
-  <h1>Daily Motivation</h1>
-  <p>Your mind is stronger than your urges.</p>
+<header class="topbar">
+    <h1>Daily Motivation</h1>
 </header>
 
-<main id="motivationPage">
+<div class="container">
+    <section class="card">
+        <h2>Tap for Motivation</h2>
+        <button id="motivateBtn" class="action-btn">Give Me Motivation</button>
+        <p id="motivationText" class="output-text"></p>
+    </section>
+</div>
 
-  <!-- Daily Quote -->
-  <section class="card">
-    <h2>Today’s Motivation</h2>
-    <p id="motivationText">Click the button to receive encouragement.</p>
-
-    <button id="newMotivationBtn">Give Me Motivation</button>
-  </section>
-
-  <!-- Categories -->
-  <section class="card">
-    <h2>Select a Category</h2>
-
-    <div id="categoryButtons">
-      <button data-type="faith">Faith</button>
-      <button data-type="discipline">Discipline</button>
-      <button data-type="purpose">Purpose</button>
-      <button data-type="recovery">Recovery</button>
-    </div>
-
-  </section>
-
-</main>
-
-<footer>
-  <p>FreeMind © 2025</p>
+<footer class="footer">
+    © 2025 FreeMind
 </footer>
-
-<script src="app.js"></script>
 
 </body>
 </html>
