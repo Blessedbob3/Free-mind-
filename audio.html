@@ -1,36 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Affirmations — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Audio Affirmations — FreeMind</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Audio Affirmations</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
+    <header class="topbar small">
+      <h1 class="huge">Audio Affirmations</h1>
+    </header>
+
     <section class="card">
-      <h2>Play Affirmation</h2>
-      <p>Tap a track to play a short affirmation.</p>
+      <p class="lead">Press play to hear a calm affirmation.</p>
 
-      <div id="audioList" class="list">
-        <button class="list-btn" data-src="">Play Affirmation 1</button>
-        <button class="list-btn" data-src="">Play Affirmation 2</button>
-        <button class="list-btn" data-src="">Play Affirmation 3</button>
+      <div class="center">
+        <button id="playAffirm" class="btn">Play Affirmation</button>
+        <button id="stopAffirm" class="btn alt">Stop</button>
       </div>
-
-      <audio id="player" controls style="width:100%; margin-top:12px;"></audio>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Audio</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const affirmations = [
+        "I choose the path of peace and strength.",
+        "Every day brings a new opportunity to grow.",
+        "I am stronger than my urges."
+      ];
+      document.getElementById('playAffirm').onclick = () =>
+        window.voiceSpeak(affirmations[Math.floor(Math.random()*affirmations.length)]);
+      document.getElementById('stopAffirm').onclick = () => window.voiceStop();
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
