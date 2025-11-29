@@ -1,37 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Profile — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Profile & Journal</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
-    <section class="card">
-      <h2>Your Journal</h2>
-      <textarea id="journalBox" placeholder="Write today’s reflection..."></textarea>
-      <div class="center" style="margin-top:10px;">
-        <button id="saveJournalBtn" class="btn">Save Entry</button>
-      </div>
-      <div id="journalEntries" style="margin-top:12px;"></div>
-    </section>
+    <header class="topbar small">
+      <h1 class="huge">Profile</h1>
+      <p class="lead">Your safe space — personal settings & progress.</p>
+    </header>
 
     <section class="card">
-      <h3>Account</h3>
-      <p id="usernameDisplay">Guest</p>
+      <label>Display name</label>
+      <input id="displayName" placeholder="Your name" />
+      <div class="center">
+        <button id="saveProfile" class="btn">Save</button>
+      </div>
+
+      <hr/>
+      <p>Streak: <strong id="profileStreak">0</strong></p>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Profile</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('displayName');
+      const saved = JSON.parse(localStorage.getItem('freemind.user') || '{}');
+      if (saved.name) nameInput.value = saved.name;
+      document.getElementById('profileStreak').textContent = localStorage.getItem('freemind.streak') || '0';
+      document.getElementById('saveProfile').onclick = () => {
+        const u = { name: nameInput.value || 'Guest' };
+        localStorage.setItem('freemind.user', JSON.stringify(u));
+        window.voiceSpeak("Profile saved. Hello " + u.name);
+      };
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
