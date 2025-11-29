@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tracker — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Recovery Tracker</h1></div></header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Daily Checklist</h2>
+      <div>
+        <label><input type="checkbox" id="chk1"> Read a short prayer</label><br>
+        <label><input type="checkbox" id="chk2"> 5 minutes meditation</label><br>
+        <label><input type="checkbox" id="chk3"> Evening reflection</label>
+      </div>
+      <div class="center" style="margin-top:12px;">
+        <button id="saveChecklist" class="btn">Save Today's Progress</button>
+      </div>
+      <p id="trackerStatus" class="muted"></p>
+    </section>
+
+    <section class="card">
+      <h3>History</h3>
+      <div id="trackerHistory"></div>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
