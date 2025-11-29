@@ -169,14 +169,3 @@ Become the version of yourself God intended
 
 Created by Blessed Bob
 For all people fighting for freedom and peace of mind.
-
-
----
-
-If you want, I can now:
-
-✅ Generate the FULL updated app files
-
-(index.html, styles.css, app.js, motivation page, prayer page, emergency page, tracker page, etc.)
-
-Just say: “Generate all files now” and I will deliver the complete ready-to-upload package.
