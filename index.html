@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreeMind App</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FreeMind — Recovery App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <header>
-        <h1>Welcome to FreeMind</h1>
-        <p>Your journey to freedom starts here.</p>
-    </header>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1 class="brand">FreeMind</h1>
+      <p class="subtitle">A kind, practical app to break addictions and build freedom</p>
+    </div>
+  </header>
 
-    <nav class="menu">
-        <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="map.html">Recovery Map</a></li>
-            <li><a href="motivation.html">Motivation</a></li>
-            <li><a href="profile.html">Profile</a></li>
-        </ul>
-    </nav>
+  <nav class="main-nav">
+    <a class="nav-link" href="home.html">Home</a>
+    <a class="nav-link" href="motivation.html">Motivation</a>
+    <a class="nav-link" href="map.html">Map</a>
+    <a class="nav-link" href="prayer.html">Prayers</a>
+    <a class="nav-link" href="tracker.html">Tracker</a>
+    <a class="nav-link" href="streak.html">Streak</a>
+    <a class="nav-link" href="goals.html">Goals</a>
+    <a class="nav-link" href="verses.html">Verses</a>
+    <a class="nav-link" href="emergency.html">Emergency</a>
+    <a class="nav-link" href="audio.html">Affirmations</a>
+    <a class="nav-link" href="profile.html">Profile</a>
+  </nav>
 
-    <section class="main-content">
-        <h2>Start Your Journey</h2>
-        <p>Select a page above to begin exploring FreeMind.</p>
+  <main class="container">
+    <section class="card">
+      <h2 class="page-title">Start Your Journey</h2>
+      <p class="lead">Use the menu above to navigate. Try Motivation → Emergency → Tracker to begin.</p>
+
+      <div class="quick-buttons">
+        <a class="btn" href="motivation.html">Daily Motivation</a>
+        <a class="btn" href="emergency.html">Emergency Mode</a>
+        <a class="btn" href="tracker.html">Recovery Tracker</a>
+      </div>
     </section>
 
-    <footer>
-        <p>© 2025 FreeMind. All rights reserved.</p>
-    </footer>
+    <section class="card">
+      <h3>Today’s Tip</h3>
+      <p id="todayTip">Small consistent wins beat huge short bursts. Do one small thing today that your future self will thank you for.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 FreeMind — Built for recovery and renewal.</p>
+  </footer>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
