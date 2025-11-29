@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prayers — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small">
+    <div class="topbar-inner">
+      <h1 class="brand small">Prayers</h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Quick Prayers</h2>
+      <div class="list">
+        <button class="list-btn" data-prayer="strength">Prayer for Strength</button>
+        <button class="list-btn" data-prayer="clarity">Prayer for Clarity</button>
+        <button class="list-btn" data-prayer="forgiveness">Prayer for Forgiveness</button>
+      </div>
+
+      <div class="spacer"></div>
+      <p id="prayerOutput" class="output-text">Tap a prayer to view it here.</p>
+    </section>
+
+    <section class="card">
+      <h3>Add Your Own Prayer</h3>
+      <textarea id="customPrayer" placeholder="Write a short prayer..."></textarea>
+      <div class="center">
+        <button id="savePrayer" class="btn">Save Prayer</button>
+      </div>
+      <div id="savedPrayers" class="list"></div>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
