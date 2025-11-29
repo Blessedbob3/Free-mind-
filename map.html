@@ -3,206 +3,167 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FreeMind | Map & Distance Tracker</title>
+<title>Map – FreeMind</title>
 
-<link rel="stylesheet" href="styles.css" />
+<!-- Leaflet Map Library -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
     body {
-        background: #eef2f7;
-        font-family: "Inter", sans-serif;
-        padding: 20px;
+        background-color: #0d1117;
+        color: #e6e6e6;
+        font-family: Arial, sans-serif;
+        font-size: 20px;        /* Bigger text */
+        line-height: 1.3;       /* Tighter spacing */
+        margin: 0;
+        padding: 0;
     }
 
-    h1 {
+    header {
+        padding: 20px;
         text-align: center;
-        font-size: 32px;
-        margin-bottom: 20px;
+        background-color: #111827;
+        font-size: 24px;
+        font-weight: bold;
     }
 
     #map {
+        height: 60vh;
         width: 100%;
-        height: 420px;
+        margin-top: 10px;
         border-radius: 12px;
-        margin-bottom: 20px;
     }
 
-    .inputBox {
-        margin-bottom: 15px;
-    }
-
-    label {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 6px;
-        display: block;
-    }
-
-    input, select {
-        width: 100%;
-        padding: 14px;
-        font-size: 18px;
-        border-radius: 10px;
-        border: 1px solid #bbb;
+    .container {
+        padding: 18px;
     }
 
     button {
-        width: 100%;
-        padding: 16px;
-        font-size: 20px;
+        background-color: #2563eb;
         border: none;
-        border-radius: 10px;
-        background: #4b8df8;
         color: white;
-        margin-top: 15px;
+        padding: 12px 18px;
+        font-size: 18px;
+        border-radius: 8px;
+        margin-top: 12px;
+        width: 100%;
     }
 
-    #output {
-        margin-top: 20px;
-        padding: 20px;
-        background: white;
-        border-radius: 12px;
+    input {
+        width: 100%;
+        padding: 12px;
         font-size: 18px;
-        line-height: 1.6;
+        border-radius: 8px;
+        border: 1px solid #333;
+        background: #1f2937;
+        color: white;
+        margin-top: 8px;
+    }
+
+    /* Voice button */
+    .voice-btn {
+        background-color: #4b5563;
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 8px;
+        font-size: 18px;
     }
 </style>
-
-<!-- Leaflet Map Library -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 </head>
 
 <body>
 
-<h1>Distance & Route Calculator</h1>
+<header>FreeMind – Distance & Map Tracker</header>
 
-<div id="map"></div>
+<div class="container">
 
-<div class="inputBox">
-    <label>Your Destination:</label>
-    <input id="destinationInput" placeholder="Example: Nairobi CBD" />
+    <p>Enter your destination and see distance, estimated time, and map route:</p>
+
+    <input id="destination" placeholder="Enter where you want to go..." />
+
+    <button onclick="calculateRoute()">Calculate Distance</button>
+
+    <button class="voice-btn" onclick="readResults()">🔊 Read Aloud</button>
+
+    <p id="output"></p>
+
+    <div id="map"></div>
+
 </div>
-
-<div class="inputBox">
-    <label>Travel Mode:</label>
-    <select id="mode">
-        <option value="driving-car">Driving</option>
-        <option value="foot-walking">Walking</option>
-    </select>
-</div>
-
-<button onclick="calculateRoute()">Calculate Route</button>
-
-<div id="output"></div>
 
 <script>
-// ======================================
-// CONFIG
-// ======================================
-const ORS_API_KEY = "YOUR_KEY_HER real keyeyeyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImExYWY4ZTgyZWYwYzRhYWRhMDVhNWQ5OGM4NTg3MjEwIiwiaCI6Im11cm11cjY0In0=JvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImExYWY4ZTgyZWYwYzRhYWRhMDVhNWQ5OGM4NTg3MjEwIiwiaCI6Im11cm11cjY0In0=
-
-let map = L.map('map').setView([0.0236, 37.9062], 7);
+let map = L.map("map").setView([0, 0], 13);
 let userMarker, destMarker, routeLine;
 
-// Load tiles
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19
 }).addTo(map);
 
-
-// --------------------------------------
-// GET USER LOCATION
-// --------------------------------------
+// Get user location
 navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-
-    userMarker = L.marker([lat, lng]).addTo(map)
-        .bindPopup("You Are Here").openPopup();
+    let lat = pos.coords.latitude;
+    let lng = pos.coords.longitude;
 
     map.setView([lat, lng], 14);
+
+    userMarker = L.marker([lat, lng]).addTo(map).bindPopup("You are here");
 });
 
-
-// --------------------------------------
-// ROUTE CALCULATION
-// --------------------------------------
-async function calculateRoute() {
-    let destinationName = document.getElementById("destinationInput").value;
-    let mode = document.getElementById("mode").value;
-
-    if (!destinationName) {
-        alert("Please enter a destination.");
+// Distance + calculation
+function calculateRoute() {
+    let destination = document.getElementById("destination").value;
+    if (!destination) {
+        alert("Enter your destination");
         return;
     }
 
-    // 1. Convert the destination name to coordinates
-    const geoRes = await fetch(
-        `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${destinationName}`
-    );
-    const geoData = await geoRes.json();
-
-    if (!geoData.features.length) {
-        alert("Destination not found.");
-        return;
-    }
-
-    const dest = geoData.features[0].geometry.coordinates; // [lng, lat]
-    const destLat = dest[1];
-    const destLng = dest[0];
-
-    if (destMarker) destMarker.remove();
-    destMarker = L.marker([destLat, destLng]).addTo(map)
-        .bindPopup(destinationName).openPopup();
-
-
-    // 2. Get user location again
-    navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        // 3. Request ROUTE
-        const bodyData = {
-            coordinates: [
-                [lng, lat],
-                [destLng, destLat]
-            ]
-        };
-
-        const routeRes = await fetch(
-            `https://api.openrouteservice.org/v2/directions/${mode}`, {
-                method: "POST",
-                headers: {
-                    "Authorization": ORS_API_KEY,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(bodyData)
+    // Convert location name into coordinates using Nominatim (free)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${destination}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.length === 0) {
+                alert("Location not found");
+                return;
             }
-        );
 
-        const routeData = await routeRes.json();
+            let destLat = data[0].lat;
+            let destLng = data[0].lon;
 
-        const route = routeData.features[0];
-        const distance = route.properties.summary.distance / 1000; // km
-        const duration = route.properties.summary.duration / 60;   // minutes
+            if (destMarker) destMarker.remove();
+            destMarker = L.marker([destLat, destLng]).addTo(map).bindPopup(destination);
 
-        // 4. Draw the route on the map
-        const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+            // Draw line
+            if (routeLine) routeLine.remove();
+            routeLine = L.polyline([
+                userMarker.getLatLng(),
+                [destLat, destLng]
+            ], { color: "blue" }).addTo(map);
 
-        if (routeLine) routeLine.remove();
-        routeLine = L.polyline(coords, { color: "blue", weight: 5 }).addTo(map);
+            // Calculate distance (km)
+            let distance = map.distance(
+                userMarker.getLatLng(),
+                [destLat, destLng]
+            ) / 1000;
 
-        map.fitBounds(routeLine.getBounds());
+            let walkTime = distance / 5 * 60;   // 5km/h walking speed
+            let driveTime = distance / 60 * 60; // 60km/h driving
 
-        // 5. Output results
-        document.getElementById("output").innerHTML = `
-            <b>Distance:</b> ${distance.toFixed(2)} km<br>
-            <b>Estimated Time:</b> ${duration.toFixed(0)} minutes<br>
-            <b>Mode:</b> ${mode === "driving-car" ? "Driving" : "Walking"}<br>
-            <b>Destination:</b> ${destinationName}
-        `;
-    });
+            document.getElementById("output").innerHTML = `
+                <br><b>Distance:</b> ${distance.toFixed(2)} km
+                <br><b>Walking time:</b> ${walkTime.toFixed(0)} minutes
+                <br><b>Driving time:</b> ${driveTime.toFixed(0)} minutes
+            `;
+        });
+}
+
+// Voice reading
+function readResults() {
+    let text = document.getElementById("output").innerText;
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.rate = 1;
+    msg.pitch = 1;
+    speechSynthesis.speak(msg);
 }
 </script>
 
