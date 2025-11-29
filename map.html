@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Map – FreeMind</title>
 
-<!-- Leaflet Map Library -->
+<!-- Leaflet -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -14,8 +14,8 @@
         background-color: #0d1117;
         color: #e6e6e6;
         font-family: Arial, sans-serif;
-        font-size: 20px;        /* Bigger text */
-        line-height: 1.3;       /* Tighter spacing */
+        font-size: 20px;
+        line-height: 1.3;
         margin: 0;
         padding: 0;
     }
@@ -35,9 +35,7 @@
         border-radius: 12px;
     }
 
-    .container {
-        padding: 18px;
-    }
+    .container { padding: 18px; }
 
     button {
         background-color: #2563eb;
@@ -61,7 +59,6 @@
         margin-top: 8px;
     }
 
-    /* Voice button */
     .voice-btn {
         background-color: #4b5563;
         padding: 10px;
@@ -93,24 +90,34 @@
 </div>
 
 <script>
-let map = L.map("map").setView([0, 0], 13);
+let userLocation = null;
 let userMarker, destMarker, routeLine;
 
+// Always load map background
+let map = L.map("map").setView([0, 0], 2);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19
 }).addTo(map);
 
-// Get user location
-navigator.geolocation.getCurrentPosition(pos => {
-    let lat = pos.coords.latitude;
-    let lng = pos.coords.longitude;
+// Request location
+navigator.geolocation.getCurrentPosition(
+    pos => {
+        let lat = pos.coords.latitude;
+        let lng = pos.coords.longitude;
 
-    map.setView([lat, lng], 14);
+        userLocation = [lat, lng];
 
-    userMarker = L.marker([lat, lng]).addTo(map).bindPopup("You are here");
-});
+        map.setView(userLocation, 14);
 
-// Distance + calculation
+        userMarker = L.marker(userLocation).addTo(map)
+            .bindPopup("You are here");
+    },
+    err => {
+        alert("Location access denied. Map will still work, but cannot calculate distance from your position.");
+    }
+);
+
+// Route calculation
 function calculateRoute() {
     let destination = document.getElementById("destination").value;
     if (!destination) {
@@ -118,7 +125,11 @@ function calculateRoute() {
         return;
     }
 
-    // Convert location name into coordinates using Nominatim (free)
+    if (!userLocation) {
+        alert("Waiting for your location… Please allow location access.");
+        return;
+    }
+
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${destination}`)
         .then(res => res.json())
         .then(data => {
@@ -127,33 +138,30 @@ function calculateRoute() {
                 return;
             }
 
-            let destLat = data[0].lat;
-            let destLng = data[0].lon;
+            let destLat = parseFloat(data[0].lat);
+            let destLng = parseFloat(data[0].lon);
 
             if (destMarker) destMarker.remove();
-            destMarker = L.marker([destLat, destLng]).addTo(map).bindPopup(destination);
+            destMarker = L.marker([destLat, destLng]).addTo(map);
 
-            // Draw line
             if (routeLine) routeLine.remove();
-            routeLine = L.polyline([
-                userMarker.getLatLng(),
-                [destLat, destLng]
-            ], { color: "blue" }).addTo(map);
+            routeLine = L.polyline([userLocation, [destLat, destLng]], { color: "blue" }).addTo(map);
 
-            // Calculate distance (km)
-            let distance = map.distance(
-                userMarker.getLatLng(),
-                [destLat, destLng]
-            ) / 1000;
+            let distance = map.distance(userLocation, [destLat, destLng]) / 1000;
 
-            let walkTime = distance / 5 * 60;   // 5km/h walking speed
-            let driveTime = distance / 60 * 60; // 60km/h driving
+            let walkTime = distance / 5 * 60;
+            let driveTime = distance / 60 * 60;
 
             document.getElementById("output").innerHTML = `
                 <br><b>Distance:</b> ${distance.toFixed(2)} km
                 <br><b>Walking time:</b> ${walkTime.toFixed(0)} minutes
                 <br><b>Driving time:</b> ${driveTime.toFixed(0)} minutes
             `;
+
+            map.fitBounds([
+                userLocation,
+                [destLat, destLng]
+            ]);
         });
 }
 
@@ -162,7 +170,6 @@ function readResults() {
     let text = document.getElementById("output").innerText;
     let msg = new SpeechSynthesisUtterance(text);
     msg.rate = 1;
-    msg.pitch = 1;
     speechSynthesis.speak(msg);
 }
 </script>
