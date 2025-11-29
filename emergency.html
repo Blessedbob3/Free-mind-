@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Emergency — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Emergency Mode</h1></div></header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Feeling tempted?</h2>
+      <p>Use the steps below — start with breathing and distraction.</p>
+      <ol>
+        <li>5 deep breaths (inhale 4s, hold 2s, exhale 6s)</li>
+        <li>Cold water on face</li>
+        <li>Stand and walk for 2 minutes</li>
+        <li>Open Motivation or Prayer</li>
+      </ol>
+
+      <div class="center" style="margin-top:12px;">
+        <button id="startBreath" class="btn action">Start 60s Breathing</button>
+        <button id="openMotivation" class="btn">Open Motivation</button>
+      </div>
+
+      <p id="emergencyStatus" class="muted"></p>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
