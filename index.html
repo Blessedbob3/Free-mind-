@@ -3,58 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FreeMind — Recovery App</title>
+  <title>FreeMind — Break the Chains</title>
+
   <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="FreeMind - a safe place to break addiction with motivation, prayer, tracking and emergency support." />
 </head>
-<body>
+<body class="page-shell">
+
+  <!-- Top navigation -->
   <header class="topbar">
-    <div class="topbar-inner">
-      <h1 class="brand">FreeMind</h1>
-      <p class="subtitle">A kind, practical app to break addictions and build freedom</p>
-    </div>
+    <div class="brand">FreeMind</div>
+    <nav class="nav">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="motivation.html">Motivation</a>
+      <a class="nav-link" href="prayer.html">Prayer</a>
+      <a class="nav-link" href="streak.html">Streak</a>
+      <a class="nav-link" href="tracker.html">Tracker</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+      <button id="voiceToggle" class="voice-toggle">🔊 Voice</button>
+    </nav>
   </header>
 
-  <nav class="main-nav">
-    <a class="nav-link" href="home.html">Home</a>
-    <a class="nav-link" href="motivation.html">Motivation</a>
-    <a class="nav-link" href="map.html">Map</a>
-    <a class="nav-link" href="prayer.html">Prayers</a>
-    <a class="nav-link" href="tracker.html">Tracker</a>
-    <a class="nav-link" href="streak.html">Streak</a>
-    <a class="nav-link" href="goals.html">Goals</a>
-    <a class="nav-link" href="verses.html">Verses</a>
-    <a class="nav-link" href="emergency.html">Emergency</a>
-    <a class="nav-link" href="audio.html">Affirmations</a>
-    <a class="nav-link" href="profile.html">Profile</a>
-  </nav>
+  <!-- App container: app.js will fetch pages into this when navigating within shell -->
+  <main id="appContainer" class="container">
+    <!-- If user opens index.html directly, fallback content is shown below (same as home) -->
+    <section class="hero">
+      <h1>Welcome to FreeMind</h1>
+      <p class="lead">A safe place to break addiction, regain control and build daily momentum.</p>
 
-  <main class="container">
-    <section class="card">
-      <h2 class="page-title">Start Your Journey</h2>
-      <p class="lead">Use the menu above to navigate. Try Motivation → Emergency → Tracker to begin.</p>
-
-      <div class="quick-buttons">
+      <div class="cta">
         <a class="btn" href="motivation.html">Daily Motivation</a>
+        <a class="btn alt" href="tracker.html">Recovery Tracker</a>
         <a class="btn" href="emergency.html">Emergency Mode</a>
-        <a class="btn" href="tracker.html">Recovery Tracker</a>
       </div>
-    </section>
 
-    <section class="card">
-      <h3>Today’s Tip</h3>
-      <p id="todayTip">Small consistent wins beat huge short bursts. Do one small thing today that your future self will thank you for.</p>
+      <p class="small muted">Tip: Use the top navigation to explore Prayer, Streak, Profile and more.</p>
     </section>
   </main>
 
   <footer class="footer">
-    <p>© 2025 FreeMind — Built for recovery and renewal.</p>
+    <small>FreeMind © 2025 — All Rights Reserved</small>
   </footer>
 
   <script src="app.js" defer></script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
