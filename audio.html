@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Affirmations — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Audio Affirmations</h1></div></header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Play Affirmation</h2>
+      <p>Tap a track to play a short affirmation.</p>
+
+      <div id="audioList" class="list">
+        <button class="list-btn" data-src="">Play Affirmation 1</button>
+        <button class="list-btn" data-src="">Play Affirmation 2</button>
+        <button class="list-btn" data-src="">Play Affirmation 3</button>
+      </div>
+
+      <audio id="player" controls style="width:100%; margin-top:12px;"></audio>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
