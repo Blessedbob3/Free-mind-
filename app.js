@@ -13,6 +13,7 @@ async function initApp() {
     await loadMap();
     setupButtons();
     setupNavigation();
+    setupMotivationPageButtons(); // Activate motivation if available
   } catch (error) {
     console.error("❌ App failed to load:", error);
   }
@@ -29,7 +30,12 @@ async function loadUserData() {
   if (user) {
     const userData = JSON.parse(user);
     console.log("👤 User loaded:", userData.username);
-    document.getElementById("usernameDisplay").innerText = userData.username;
+
+    const display = document.getElementById("usernameDisplay");
+    if (display) {
+      display.innerText = userData.username;
+    }
+
   } else {
     console.log("⚠️ No user found. Guest mode.");
   }
@@ -45,6 +51,12 @@ async function loadMap() {
     "esri/Map",
     "esri/views/MapView"
   ], function (Map, MapView) {
+
+    const containerDiv = document.getElementById("viewDiv");
+    if (!containerDiv) {
+      console.warn("⚠️ Map container not found. Skipping map loading.");
+      return;
+    }
 
     const map = new Map({
       basemap: "dark-gray"
@@ -120,7 +132,43 @@ async function loadPage(page) {
     const data = await res.text();
     document.getElementById("appContainer").innerHTML = data;
     console.log(`✅ ${page} loaded`);
+
+    // re-enable motivation button after page load
+    setupMotivationPageButtons();
+
   } catch (err) {
     console.error("❌ Page load failed:", err);
+  }
+}
+
+/* ===============================
+      MOTIVATIONAL ENGINE
+================================= */
+
+const motivations = [
+  "You are stronger than the addiction trying to control you.",
+  "Every small victory counts. Keep moving forward.",
+  "God is not done with you — you are being rebuilt.",
+  "You didn’t come this far to fall back now.",
+  "Your future self is thanking you for today’s discipline.",
+  "Freedom begins with a single decision — you made it today.",
+  "Even if you fell yesterday, today is fresh and new.",
+  "You are not alone. You are never alone. Keep going."
+];
+
+function loadMotivation() {
+  const randomIndex = Math.floor(Math.random() * motivations.length);
+  const text = motivations[randomIndex];
+
+  const display = document.getElementById("dailyText");
+  if (display) {
+    display.innerText = text;
+  }
+}
+
+function setupMotivationPageButtons() {
+  const btn = document.getElementById("dailyBtn");
+  if (btn) {
+    btn.onclick = loadMotivation;
   }
 }
