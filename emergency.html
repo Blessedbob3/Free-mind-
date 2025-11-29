@@ -1,41 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Emergency — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Emergency Mode</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
+    <header class="topbar small">
+      <h1 class="huge">Emergency Mode</h1>
+      <p class="lead">Quick steps when cravings hit.</p>
+    </header>
+
     <section class="card">
-      <h2>Feeling tempted?</h2>
-      <p>Use the steps below — start with breathing and distraction.</p>
       <ol>
-        <li>5 deep breaths (inhale 4s, hold 2s, exhale 6s)</li>
+        <li>5 deep breaths</li>
         <li>Cold water on face</li>
-        <li>Stand and walk for 2 minutes</li>
-        <li>Open Motivation or Prayer</li>
+        <li>Stand & walk for 2 minutes</li>
+        <li>Open a motivation or prayer</li>
       </ol>
 
-      <div class="center" style="margin-top:12px;">
-        <button id="startBreath" class="btn action">Start 60s Breathing</button>
-        <button id="openMotivation" class="btn">Open Motivation</button>
+      <div class="center">
+        <button id="startBreath" class="btn">Start 60s breathing</button>
+        <button id="playEmergency" class="btn alt">🔊 Read Steps</button>
       </div>
 
       <p id="emergencyStatus" class="muted"></p>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Emergency</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('playEmergency').onclick = () =>
+        window.voiceSpeak("Breath deeply five times. Splash cold water. Move away and open a motivational message.");
+      document.getElementById('startBreath').onclick = () => {
+        window.voiceSpeak("Start breathing now. Inhale... Exhale...");
+        document.getElementById('emergencyStatus').textContent = "Breathing exercise started...";
+        setTimeout(()=> document.getElementById('emergencyStatus').textContent = "Done. How are you feeling?", 60000);
+      };
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
