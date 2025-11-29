@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Map — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.29/"></script>
+</head>
+<body>
+  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Recovery Map</h1></div></header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Interactive Map</h2>
+      <div id="viewDiv" style="min-height:320px; border-radius:8px; overflow:hidden;"></div>
+      <p class="muted">Map loads if ArcGIS library is available.</p>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
