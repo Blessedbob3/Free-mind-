@@ -168,7 +168,6 @@ Become the version of yourself God intended
 🙌 CREDITS
 
 Created by Blessed Bob
-Built with guidance from ChatGPT
 For all people fighting for freedom and peace of mind.
 
 
