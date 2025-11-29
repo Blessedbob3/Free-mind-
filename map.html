@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Map – FreeMind</title>
 
-<!-- Leaflet -->
+<!-- Leaflet CSS + JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -35,7 +35,9 @@
         border-radius: 12px;
     }
 
-    .container { padding: 18px; }
+    .container {
+        padding: 18px;
+    }
 
     button {
         background-color: #2563eb;
@@ -93,13 +95,14 @@
 let userLocation = null;
 let userMarker, destMarker, routeLine;
 
-// Always load map background
-let map = L.map("map").setView([0, 0], 2);
+// INITIAL MAP (shows instantly)
+let map = L.map("map").setView([0, 0], 13);
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19
 }).addTo(map);
 
-// Request location
+// GET USER LOCATION
 navigator.geolocation.getCurrentPosition(
     pos => {
         let lat = pos.coords.latitude;
@@ -109,15 +112,16 @@ navigator.geolocation.getCurrentPosition(
 
         map.setView(userLocation, 14);
 
-        userMarker = L.marker(userLocation).addTo(map)
+        userMarker = L.marker(userLocation)
+            .addTo(map)
             .bindPopup("You are here");
     },
     err => {
-        alert("Location access denied. Map will still work, but cannot calculate distance from your position.");
+        alert("Location access denied. Map will still work, but distance cannot be calculated from your position.");
     }
 );
 
-// Route calculation
+// CALCULATE ROUTE
 function calculateRoute() {
     let destination = document.getElementById("destination").value;
     if (!destination) {
@@ -145,7 +149,8 @@ function calculateRoute() {
             destMarker = L.marker([destLat, destLng]).addTo(map);
 
             if (routeLine) routeLine.remove();
-            routeLine = L.polyline([userLocation, [destLat, destLng]], { color: "blue" }).addTo(map);
+            routeLine = L.polyline([userLocation, [destLat, destLng]], { color: "blue" })
+                .addTo(map);
 
             let distance = map.distance(userLocation, [destLat, destLng]) / 1000;
 
@@ -158,14 +163,11 @@ function calculateRoute() {
                 <br><b>Driving time:</b> ${driveTime.toFixed(0)} minutes
             `;
 
-            map.fitBounds([
-                userLocation,
-                [destLat, destLng]
-            ]);
+            map.fitBounds([userLocation, [destLat, destLng]]);
         });
 }
 
-// Voice reading
+// VOICE READING
 function readResults() {
     let text = document.getElementById("output").innerText;
     let msg = new SpeechSynthesisUtterance(text);
