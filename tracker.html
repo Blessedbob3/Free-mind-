@@ -1,41 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Tracker — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Recovery Tracker</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
-    <section class="card">
-      <h2>Daily Checklist</h2>
-      <div>
-        <label><input type="checkbox" id="chk1"> Read a short prayer</label><br>
-        <label><input type="checkbox" id="chk2"> 5 minutes meditation</label><br>
-        <label><input type="checkbox" id="chk3"> Evening reflection</label>
-      </div>
-      <div class="center" style="margin-top:12px;">
-        <button id="saveChecklist" class="btn">Save Today's Progress</button>
-      </div>
-      <p id="trackerStatus" class="muted"></p>
-    </section>
+    <header class="topbar small">
+      <h1 class="huge">Recovery Tracker</h1>
+      <p class="lead">Log urges, wins and notes — build your history.</p>
+    </header>
 
     <section class="card">
-      <h3>History</h3>
-      <div id="trackerHistory"></div>
+      <label>Today's note</label>
+      <textarea id="note" rows="4" placeholder="I felt tempted when..."></textarea>
+      <div class="center">
+        <button id="saveNote" class="btn">Save Note</button>
+      </div>
+      <hr/>
+      <h3>Recent notes</h3>
+      <ul id="notesList" class="list muted"></ul>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Tracker</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const listEl = document.getElementById('notesList');
+      const stored = JSON.parse(localStorage.getItem('freemind.notes') || '[]');
+      function render() {
+        listEl.innerHTML = stored.slice().reverse().map(n => `<li>${n.time}: ${n.text}</li>`).join('');
+      }
+      render();
+      document.getElementById('saveNote').onclick = () => {
+        const t = document.getElementById('note').value.trim();
+        if (!t) return alert('Write something first');
+        const entry = { time: new Date().toLocaleString(), text: t };
+        stored.push(entry);
+        localStorage.setItem('freemind.notes', JSON.stringify(stored));
+        document.getElementById('note').value = '';
+        render();
+        window.voiceSpeak('Note saved');
+      };
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
