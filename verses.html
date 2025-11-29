@@ -1,31 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Verses — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Bible Verses — FreeMind</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Bible Verses</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
+    <header class="topbar small">
+      <h1 class="huge">Verse of the Day</h1>
+      <p class="lead">A calming verse for the journey.</p>
+    </header>
+
     <section class="card">
-      <h2>Verse of the Moment</h2>
-      <p id="verseOutput" class="output-text">Tap the button to get a verse.</p>
+      <p id="verseText" class="big">"Be strong and courageous." — Joshua 1:9</p>
       <div class="center">
-        <button id="verseBtn" class="btn">Get Verse</button>
+        <button id="newVerse" class="btn">New Verse</button>
+        <button id="playVerse" class="btn alt">🔊 Read Verse</button>
       </div>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Verses</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const verses = [
+        '"Be strong and courageous." — Joshua 1:9',
+        '"I can do all things through Christ who strengthens me." — Philippians 4:13',
+        '"The Lord is my shepherd..." — Psalm 23:1'
+      ];
+      const el = document.getElementById('verseText');
+      document.getElementById('newVerse').onclick = () => el.textContent = verses[Math.floor(Math.random()*verses.length)];
+      document.getElementById('playVerse').onclick = () => window.voiceSpeak(el.textContent);
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
