@@ -1,48 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prayers — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Prayer — FreeMind</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small">
-    <div class="topbar-inner">
-      <h1 class="brand small">Prayers</h1>
-    </div>
-  </header>
+<body class="theme-light-2 page-full">
 
   <main class="container">
-    <section class="card">
-      <h2>Quick Prayers</h2>
-      <div class="list">
-        <button class="list-btn" data-prayer="strength">Prayer for Strength</button>
-        <button class="list-btn" data-prayer="clarity">Prayer for Clarity</button>
-        <button class="list-btn" data-prayer="forgiveness">Prayer for Forgiveness</button>
-      </div>
-
-      <div class="spacer"></div>
-      <p id="prayerOutput" class="output-text">Tap a prayer to view it here.</p>
-    </section>
+    <header class="topbar small">
+      <h1 class="huge">Prayer & Reflection</h1>
+      <p class="lead">Short prayers and quiet prompts.</p>
+    </header>
 
     <section class="card">
-      <h3>Add Your Own Prayer</h3>
-      <textarea id="customPrayer" placeholder="Write a short prayer..."></textarea>
+      <p id="prayerText" class="big">Lord, grant me strength today to walk away and choose life.</p>
+
       <div class="center">
-        <button id="savePrayer" class="btn">Save Prayer</button>
+        <button id="newPrayer" class="btn">New Prayer</button>
+        <button id="playPrayer" class="btn alt">🔊 Read Prayer</button>
       </div>
-      <div id="savedPrayers" class="list"></div>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Prayer</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const prayers = [
+        "Lord, give me strength to choose what is life-giving.",
+        "Help me to remember I am loved and not alone.",
+        "Grant me courage to step away and seek help when needed."
+      ];
+      const el = document.getElementById('prayerText');
+      document.getElementById('newPrayer').onclick = () =>
+        el.textContent = prayers[Math.floor(Math.random()*prayers.length)];
+      document.getElementById('playPrayer').onclick = () => window.voiceSpeak(el.textContent);
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
