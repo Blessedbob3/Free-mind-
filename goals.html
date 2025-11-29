@@ -1,32 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Goals — FreeMind</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Daily Goals — FreeMind</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Daily Goals</h1></div></header>
+<body class="theme-dark page-full">
 
   <main class="container">
+    <header class="topbar small">
+      <h1 class="huge">Daily Goals</h1>
+      <p class="lead">Set small, achievable goals.</p>
+    </header>
+
     <section class="card">
-      <h2>Create a Goal</h2>
-      <input id="goalInput" placeholder="Today's small goal" />
+      <input id="goalInput" placeholder="Add a goal (e.g., 10 min prayer)"/>
       <div class="center" style="margin-top:10px;">
-        <button id="addGoal" class="btn">Add Goal</button>
+        <button id="addGoal" class="btn">Add</button>
       </div>
-      <div id="goalList" style="margin-top:12px;"></div>
+      <ul id="goalsList" class="list muted"></ul>
     </section>
   </main>
 
-  <footer class="footer">© FreeMind</footer>
+  <footer class="footer small">FreeMind • Goals</footer>
 
   <script src="app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const listEl = document.getElementById('goalsList');
+      const storageKey = 'freemind.goals';
+      let goals = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      function render() {
+        listEl.innerHTML = goals.map((g,i) => `<li>${g} <button data-i="${i}" class="small">Done</button></li>`).join('');
+        document.querySelectorAll('#goalsList button.small').forEach(b => b.onclick = (e) => {
+          const i = +b.getAttribute('data-i'); goals.splice(i,1); localStorage.setItem(storageKey, JSON.stringify(goals)); render();
+        });
+      }
+      render();
+      document.getElementById('addGoal').onclick = () => {
+        const v = document.getElementById('goalInput').value.trim();
+        if (!v) return;
+        goals.push(v);
+        localStorage.setItem(storageKey, JSON.stringify(goals));
+        document.getElementById('goalInput').value = '';
+        render();
+        window.voiceSpeak('Goal added: ' + v);
+      };
+    });
+  </script>
 </body>
 </html>
-<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-    <button onclick="playAudio()">🔊 Play</button>
-    <button onclick="pauseAudio()">⏸ Pause</button>
-    <button onclick="stopAudio()">⏹ Stop</button>
-</div>
