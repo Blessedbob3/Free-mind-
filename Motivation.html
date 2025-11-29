@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Motivation — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small">
+    <div class="topbar-inner">
+      <h1 class="brand small">Daily Motivation</h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Tap for encouragement</h2>
+      <p id="motivationOutput" class="output-text">Press the button for a message.</p>
+      <div class="center">
+        <button id="motivateBtn" class="btn action">Give Me Motivation</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Categories</h3>
+      <div class="chips">
+        <button class="chip" data-category="faith">Faith</button>
+        <button class="chip" data-category="discipline">Discipline</button>
+        <button class="chip" data-category="purpose">Purpose</button>
+        <button class="chip" data-category="recovery">Recovery</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© FreeMind</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
