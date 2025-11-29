@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile — FreeMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar small"><div class="topbar-inner"><h1 class="brand small">Profile & Journal</h1></div></header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Your Journal</h2>
+      <textarea id="journalBox" placeholder="Write today’s reflection..."></textarea>
+      <div class="center" style="margin-top:10px;">
+        <button id="saveJournalBtn" class="btn">Save Entry</button>
+      </div>
+      <div id="journalEntries" style="margin-top:12px;"></div>
+    </section>
+
+    <section class="card">
+      <h3>Account</h3>
+      <p id="usernameDisplay">Guest</p>
+    </section>
+  </main>
+
+  <footer class="footer">© FreeMind</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
