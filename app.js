@@ -223,3 +223,8 @@ function setupMapSafe(){
 
 /* helpers */
 function escapeHtml(str){ if(!str) return ""; return str.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
+<div id="voice-controls" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+    <button onclick="playAudio()">🔊 Play</button>
+    <button onclick="pauseAudio()">⏸ Pause</button>
+    <button onclick="stopAudio()">⏹ Stop</button>
+</div>
