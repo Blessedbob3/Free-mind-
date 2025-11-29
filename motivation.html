@@ -1,13 +1,50 @@
-<section id="motivationPage">
-    <h2>Daily Motivation</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <p>Click below to receive a random powerful message.</p>
+  <title>FreeMind | Motivation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <button id="dailyBtn">Get Motivation</button>
-    <p id="dailyText"></p>
+<body>
 
-    <hr>
+<header>
+  <h1>Daily Motivation</h1>
+  <p>Your mind is stronger than your urges.</p>
+</header>
 
-    <h3>Why Motivation Helps</h3>
-    <p>Consistent encouragement rewires your mind and strengthens your discipline.</p>
-</section>
+<main id="motivationPage">
+
+  <!-- Daily Quote -->
+  <section class="card">
+    <h2>Today’s Motivation</h2>
+    <p id="motivationText">Click the button to receive encouragement.</p>
+
+    <button id="newMotivationBtn">Give Me Motivation</button>
+  </section>
+
+  <!-- Categories -->
+  <section class="card">
+    <h2>Select a Category</h2>
+
+    <div id="categoryButtons">
+      <button data-type="faith">Faith</button>
+      <button data-type="discipline">Discipline</button>
+      <button data-type="purpose">Purpose</button>
+      <button data-type="recovery">Recovery</button>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  <p>FreeMind © 2025</p>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
